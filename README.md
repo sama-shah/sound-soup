@@ -5,7 +5,7 @@ this web app acts just like it sounds. a mixture of sounds thrown together to ma
 
 **Sound Soup is a web-based music synthesizer to dress up a song into another genre. i use this app as a way to create tracks that layers over the song i am listening to to turn it into a whimsical/house/trap remix.**
 
-Inspired by the way i use dj.app and onlineomnichord.com, i designed sound soup for experimental musicians who have an ear for music but dont care to pull up & relearn music theory just to execute a vision. more people need to make music that *feels* good - something between new and nostalgic.
+Inspired by the way i use dj.app and onlineomnichord.com, i designed sound soup for experimental musicians who have an ear for music but dont care to pull up & relearn music theory just to execute a vision. more people need to make music that *feels* good. Something between new and nostalgic.
 
 ---
 
