@@ -41,7 +41,7 @@ layer up to 4 tracks and loop them together. build a beat with the board and voi
 
 ---
 
-## read the tutorial on the board at the top if you have more questions about how to use it! here's a tldr:
+## Read the tutorial on the site! Here's a tldr:
 ### Getting started
 1. **pick a chord** from the Chord Matrix (try C Major to start)
 2. **play the strumplate** by clicking or dragging across the 12 keys indicated (number row: 1 through "=")
