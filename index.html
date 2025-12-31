@@ -859,19 +859,12 @@ const FX_KEYS = ['q', 'w', 'e', 'r', 't', 'a', 's'];
         }}>
           STRUMPLATE CONTROL
         </div>
-        <div className="w-64 py-2 px-4 text-xs tracking-widest" style={{
-          background: colors.panel,
-          borderLeft: `2px solid ${colors.lime}`,
-          color: colors.lime
-        }}>
-          CHORD MATRIX
-        </div>
         <div className="flex-1 py-2 px-4 text-xs tracking-widest" style={{
           background: colors.panel,
           borderLeft: `2px solid ${colors.magenta}`,
           color: colors.magenta
         }}>
-          EFFECTS & TRACKS
+          CHORD MATRIX & TRACKS
         </div>
         <div className="w-48 py-2 px-4 text-xs tracking-widest" style={{
           background: colors.panel,
@@ -1179,159 +1172,181 @@ const FX_KEYS = ['q', 'w', 'e', 'r', 't', 'a', 's'];
           </div>
         </div>
 
-        {/* Center Panel - Chord Matrix (Vertical) */}
-        <div className="w-64" style={{ background: colors.panel, border: `1px solid ${colors.border}` }}>
+        {/* Right Panel - Chord Matrix, Effects & Tracks */}
+        <div className="flex-1" style={{ background: colors.panel, border: `1px solid ${colors.border}` }}>
           <div className="p-4">
-            {/* Sound Mode Selector */}
+            {/* Chord Matrix - Horizontal Layout */}
             <div className="mb-4">
-              <div className="text-xs mb-2 tracking-widest" style={{ color: colors.text }}>
-                MODE.SELECT
-              </div>
-              <div className="grid grid-cols-2 gap-2">
-                {['omnichord', 'house', 'trap'].map(mode => (
-                  <button
-                    key={mode}
-                    onClick={() => setChordMode(mode)}
-                    className="py-2 text-xs tracking-wider transition-all"
-                    style={{
-                      background: chordMode === mode ? `${colors.lime}20` : 'transparent',
-                      border: `1px solid ${chordMode === mode ? colors.lime : colors.border}`,
-                      color: chordMode === mode ? colors.lime : colors.text,
-                      boxShadow: chordMode === mode ? `0 0 10px ${colors.lime}30, inset 0 0 20px ${colors.lime}10` : 'none'
-                    }}
-                  >
-                    {mode.toUpperCase()}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Chord Matrix Volume Control */}
-            <div className="mb-4">
-              <div className="flex items-center gap-2">
-                <span className="text-xs tracking-widest" style={{ color: colors.text, width: '32px' }}>
-                  VOL
-                </span>
-                <div className="relative flex-1 h-2" style={{ background: colors.border }}>
-                  <div
-                    className="absolute h-full transition-all"
-                    style={{
-                      width: `${((chordVolume + 20) / 20) * 100}%`,
-                      background: `linear-gradient(90deg, ${colors.cyan}, ${colors.lime})`
-                    }}
-                  />
-                  <input
-                    type="range"
-                    min="-20"
-                    max="0"
-                    step="1"
-                    value={chordVolume}
-                    onChange={(e) => setChordVolume(Number(e.target.value))}
-                    className="absolute inset-0 w-full opacity-0 cursor-pointer"
-                  />
+              <div className="flex items-center gap-4 mb-3">
+                <div className="text-xs tracking-widest" style={{ color: colors.text }}>
+                  CHORD.MATRIX
                 </div>
-                <span className="text-xs" style={{ color: colors.lime, width: '32px', textAlign: 'right', fontSize: '9px' }}>
-                  {chordVolume}dB
-                </span>
-              </div>
-            </div>
-
-            {/* Chord Grid - Compressed Layout with Column Headers */}
-            <div>
-              {/* Column Headers */}
-              <div className="grid grid-cols-4 gap-1 mb-2">
-                <div className="text-xs font-bold" style={{ color: colors.text, fontSize: '9px' }}>
-                  ROOT
+                <div className="flex gap-2">
+                  {['omnichord', 'house', 'trap'].map(mode => (
+                    <button
+                      key={mode}
+                      onClick={() => setChordMode(mode)}
+                      className="px-3 py-1 text-xs tracking-wider transition-all"
+                      style={{
+                        background: chordMode === mode ? `${colors.lime}20` : 'transparent',
+                        border: `1px solid ${chordMode === mode ? colors.lime : colors.border}`,
+                        color: chordMode === mode ? colors.lime : colors.text,
+                        boxShadow: chordMode === mode ? `0 0 10px ${colors.lime}30` : 'none'
+                      }}
+                    >
+                      {mode.toUpperCase()}
+                    </button>
+                  ))}
                 </div>
-                <div className="text-xs font-bold text-center" style={{ color: colors.cyan, fontSize: '9px' }}>
-                  MAJ
-                </div>
-                <div className="text-xs font-bold text-center" style={{ color: colors.lime, fontSize: '9px' }}>
-                  MIN
-                </div>
-                <div className="text-xs font-bold text-center" style={{ color: colors.magenta, fontSize: '9px' }}>
-                  7TH
+                <div className="flex items-center gap-2 ml-auto">
+                  <span className="text-xs tracking-widest" style={{ color: colors.text, fontSize: '9px' }}>
+                    VOL
+                  </span>
+                  <div className="relative w-20 h-2" style={{ background: colors.border }}>
+                    <div
+                      className="absolute h-full transition-all"
+                      style={{
+                        width: `${((chordVolume + 20) / 20) * 100}%`,
+                        background: `linear-gradient(90deg, ${colors.cyan}, ${colors.lime})`
+                      }}
+                    />
+                    <input
+                      type="range"
+                      min="-20"
+                      max="0"
+                      step="1"
+                      value={chordVolume}
+                      onChange={(e) => setChordVolume(Number(e.target.value))}
+                      className="absolute inset-0 w-full opacity-0 cursor-pointer"
+                    />
+                  </div>
+                  <span className="text-xs" style={{ color: colors.lime, fontSize: '9px' }}>
+                    {chordVolume}dB
+                  </span>
                 </div>
               </div>
 
-              {/* Chord Rows */}
-              <div className="space-y-1">
-                {CHORD_ROOTS.map((root, rootIdx) => (
-                  <div key={root} className="grid grid-cols-4 gap-1">
-                    {/* Root Label */}
-                    <div className="flex items-center">
-                      <div className="text-xs font-bold" style={{ color: colors.cyan }}>
-                        {root}
-                      </div>
-                    </div>
+              {/* Horizontal Chord Grid with Row Headers */}
+              <div>
+                <div className="grid gap-1" style={{ gridTemplateColumns: '40px repeat(27, 1fr)' }}>
+                  {/* Header Row */}
+                  <div></div>
+                  {CHORD_ROOTS.map(root => (
+                    <React.Fragment key={root}>
+                      <div className="text-center text-xs font-bold" style={{ color: colors.cyan, fontSize: '8px' }}>{root}</div>
+                      <div className="text-center text-xs font-bold" style={{ color: colors.lime, fontSize: '8px' }}></div>
+                      <div className="text-center text-xs font-bold" style={{ color: colors.magenta, fontSize: '8px' }}></div>
+                    </React.Fragment>
+                  ))}
 
-                    {/* Chord Type Buttons */}
-                    {[
-                      { type: 'major', keys: MAJOR_KEYS, color: colors.cyan },
-                      { type: 'minor', keys: MINOR_KEYS, color: colors.lime },
-                      { type: '7th', keys: SEVENTH_KEYS, color: colors.magenta }
-                    ].map(({ type, keys, color }) => {
-                      const key = keys[rootIdx];
-                      return (
+                  {/* MAJ Row */}
+                  <div className="flex items-center text-xs font-bold" style={{ color: colors.cyan, fontSize: '9px' }}>MAJ</div>
+                  {CHORD_ROOTS.map((root, rootIdx) => {
+                    const key = MAJOR_KEYS[rootIdx];
+                    return (
+                      <React.Fragment key={root}>
                         <button
-                          key={type}
-                          onMouseDown={() => playChord(root, type)}
+                          onMouseDown={() => playChord(root, 'major')}
                           onMouseUp={() => releaseChord()}
                           onMouseLeave={() => releaseChord()}
-                          className="h-12 relative transition-all group"
+                          className="h-10 relative transition-all"
                           style={{
                             background: isKeyActive(key)
-                              ? `${color}25`
+                              ? `${colors.cyan}25`
                               : 'linear-gradient(180deg, #1a2332 0%, #0d1117 100%)',
-                            border: `1px solid ${isKeyActive(key) ? color : colors.border}`,
-                            boxShadow: isKeyActive(key) ? `0 0 20px ${color}40, inset 0 0 15px ${color}15` : 'none'
+                            border: `1px solid ${isKeyActive(key) ? colors.cyan : colors.border}`,
+                            boxShadow: isKeyActive(key) ? `0 0 15px ${colors.cyan}40` : 'none'
                           }}
                         >
-                          {/* Checkered pattern background */}
-                          <div className="absolute inset-0 opacity-15" style={{
-                            backgroundImage: `
-                              repeating-linear-gradient(
-                                45deg,
-                                transparent,
-                                transparent 3px,
-                                ${colors.border} 3px,
-                                ${colors.border} 6px
-                              ),
-                              repeating-linear-gradient(
-                                -45deg,
-                                transparent,
-                                transparent 3px,
-                                ${colors.border} 3px,
-                                ${colors.border} 6px
-                              )
-                            `
-                          }} />
-
-                          {/* Key indicator - larger and centered */}
                           <span className="relative z-10 text-xs font-bold" style={{
-                            color: isKeyActive(key) ? color : colors.text,
-                            fontSize: '11px'
+                            color: isKeyActive(key) ? colors.cyan : colors.text,
+                            fontSize: '10px'
+                          }}>
+                            {key.toUpperCase()}
+                          </span>
+                          {isKeyActive(key) && (
+                            <div className="absolute bottom-0 left-0 right-0 h-1" style={{ background: colors.cyan }} />
+                          )}
+                        </button>
+                        <div></div>
+                        <div></div>
+                      </React.Fragment>
+                    );
+                  })}
+
+                  {/* MIN Row */}
+                  <div className="flex items-center text-xs font-bold" style={{ color: colors.lime, fontSize: '9px' }}>MIN</div>
+                  {CHORD_ROOTS.map((root, rootIdx) => {
+                    const key = MINOR_KEYS[rootIdx];
+                    return (
+                      <React.Fragment key={root}>
+                        <div></div>
+                        <button
+                          onMouseDown={() => playChord(root, 'minor')}
+                          onMouseUp={() => releaseChord()}
+                          onMouseLeave={() => releaseChord()}
+                          className="h-10 relative transition-all"
+                          style={{
+                            background: isKeyActive(key)
+                              ? `${colors.lime}25`
+                              : 'linear-gradient(180deg, #1a2332 0%, #0d1117 100%)',
+                            border: `1px solid ${isKeyActive(key) ? colors.lime : colors.border}`,
+                            boxShadow: isKeyActive(key) ? `0 0 15px ${colors.lime}40` : 'none'
+                          }}
+                        >
+                          <span className="relative z-10 text-xs font-bold" style={{
+                            color: isKeyActive(key) ? colors.lime : colors.text,
+                            fontSize: '10px'
+                          }}>
+                            {key.toUpperCase()}
+                          </span>
+                          {isKeyActive(key) && (
+                            <div className="absolute bottom-0 left-0 right-0 h-1" style={{ background: colors.lime }} />
+                          )}
+                        </button>
+                        <div></div>
+                      </React.Fragment>
+                    );
+                  })}
+
+                  {/* 7TH Row */}
+                  <div className="flex items-center text-xs font-bold" style={{ color: colors.magenta, fontSize: '9px' }}>7TH</div>
+                  {CHORD_ROOTS.map((root, rootIdx) => {
+                    const key = SEVENTH_KEYS[rootIdx];
+                    return (
+                      <React.Fragment key={root}>
+                        <div></div>
+                        <div></div>
+                        <button
+                          onMouseDown={() => playChord(root, '7th')}
+                          onMouseUp={() => releaseChord()}
+                          onMouseLeave={() => releaseChord()}
+                          className="h-10 relative transition-all"
+                          style={{
+                            background: isKeyActive(key)
+                              ? `${colors.magenta}25`
+                              : 'linear-gradient(180deg, #1a2332 0%, #0d1117 100%)',
+                            border: `1px solid ${isKeyActive(key) ? colors.magenta : colors.border}`,
+                            boxShadow: isKeyActive(key) ? `0 0 15px ${colors.magenta}40` : 'none'
+                          }}
+                        >
+                          <span className="relative z-10 text-xs font-bold" style={{
+                            color: isKeyActive(key) ? colors.magenta : colors.text,
+                            fontSize: '10px'
                           }}>
                             {key === ',' ? ',' : key === '.' ? '.' : key.toUpperCase()}
                           </span>
-
-                          {/* Active indicator bar */}
                           {isKeyActive(key) && (
-                            <div className="absolute bottom-0 left-0 right-0 h-1" style={{ background: color }} />
+                            <div className="absolute bottom-0 left-0 right-0 h-1" style={{ background: colors.magenta }} />
                           )}
                         </button>
-                      );
-                    })}
-                  </div>
-                ))}
+                      </React.Fragment>
+                    );
+                  })}
+                </div>
               </div>
             </div>
-          </div>
-        </div>
 
-        {/* Right Panel - Effects & Tracks */}
-        <div className="flex-1" style={{ background: colors.panel, border: `1px solid ${colors.border}` }}>
-          <div className="p-4">
             {/* Effects Row */}
             <div className="mb-4">
               <div className="flex items-center justify-between mb-3">
