@@ -108,6 +108,7 @@ const FX_KEYS = ['q', 'w', 'e', 'r', 't', 'a', 's'];
   const [tracks, setTracks] = useState([]);
   const [playingTracks, setPlayingTracks] = useState(new Set());
   const [trackPositions, setTrackPositions] = useState({});
+  const [trackVolumes, setTrackVolumes] = useState({});
   const [allPlaying, setAllPlaying] = useState(false);
 
   // Voice recording state
@@ -387,6 +388,7 @@ const FX_KEYS = ['q', 'w', 'e', 'r', 't', 'a', 's'];
       };
       setTracks(prev => [...prev, newTrack]);
       setTrackPositions(prev => ({ ...prev, [newTrack.id]: 0 }));
+      setTrackVolumes(prev => ({ ...prev, [newTrack.id]: 0 })); // 0dB = 100% volume
     }
   };
 
@@ -429,28 +431,32 @@ const FX_KEYS = ['q', 'w', 'e', 'r', 't', 'a', 's'];
 
   const playTrack = (track, fromPlayAll = false) => {
     if (playingTracks.has(track.id)) return;
-    
+
     const newPlayingTracks = new Set(playingTracks);
     newPlayingTracks.add(track.id);
     setPlayingTracks(newPlayingTracks);
-    
+
     const playEvents = (startPosition = 0) => {
       const startTime = Date.now();
       let currentEventIndex = track.events.findIndex(e => e.time >= startPosition);
       if (currentEventIndex === -1) currentEventIndex = 0;
       let lastLoopTime = 0;
-      
+
+      // Get track volume (0dB default)
+      const trackVol = trackVolumes[track.id] ?? 0;
+      const volumeMultiplier = Math.pow(10, trackVol / 20); // Convert dB to linear multiplier
+
       const interval = setInterval(() => {
         const elapsed = (Date.now() - startTime) + startPosition;
         const loopedElapsed = elapsed % track.duration;
         setTrackPositions(prev => ({ ...prev, [track.id]: loopedElapsed }));
-        
+
         // Detect loop restart
         if (loopedElapsed < lastLoopTime) {
           currentEventIndex = 0;
         }
         lastLoopTime = loopedElapsed;
-        
+
         while (currentEventIndex < track.events.length && track.events[currentEventIndex].time <= loopedElapsed) {
           const event = track.events[currentEventIndex];
 
@@ -460,14 +466,14 @@ const FX_KEYS = ['q', 'w', 'e', 'r', 't', 'a', 's'];
                                event.data.chordMode === 'house' ? houseSynthRef.current :
                                event.data.chordMode === 'trap' ? trapSynthRef.current :
                                event.data.chordMode === 'drop' ? dropSynthRef.current : omnichordSynthRef.current;
-            chordSynth?.triggerAttackRelease(event.data.freqs, '2n');
+            chordSynth?.triggerAttackRelease(event.data.freqs, '2n', Tone.now(), volumeMultiplier);
           } else if (event.type === 'harp') {
             const synth = event.data.strumplateMode === 'omnichord' ? omnichordSynthRef.current :
                          event.data.strumplateMode === 'harp' ? harpSynthRef.current :
                          event.data.strumplateMode === 'house' ? houseSynthRef.current :
                          event.data.strumplateMode === 'trap' ? trapSynthRef.current :
                          event.data.strumplateMode === 'drop' ? dropSynthRef.current : harpSynthRef.current;
-            synth?.triggerAttackRelease(event.data.freq, '8n');
+            synth?.triggerAttackRelease(event.data.freq, '8n', Tone.now(), volumeMultiplier);
           } else if (event.type === 'drum') {
             const drumSynth = drumSynthsRef.current[event.data.drumName];
             if (drumSynth) {
@@ -486,27 +492,27 @@ const FX_KEYS = ['q', 'w', 'e', 'r', 't', 'a', 's'];
                 drumSynth.frequency.cancelScheduledValues(Tone.now());
                 drumSynth.frequency.setValueAtTime(2000, Tone.now());
                 drumSynth.frequency.exponentialRampToValueAtTime(100, Tone.now() + 0.3);
-                drumSynth.triggerAttackRelease('C6', '8n');
+                drumSynth.triggerAttackRelease('C6', '8n', Tone.now(), volumeMultiplier);
               } else if (drumName === 'DROP') {
                 const baseNote = Tone.Frequency('C1').toFrequency() * (event.data.pitchMultiplier || 1);
-                drumSynth.triggerAttackRelease(baseNote, '2n');
+                drumSynth.triggerAttackRelease(baseNote, '2n', Tone.now(), volumeMultiplier);
               } else if (drumName === 'KICK') {
-                drumSynth.triggerAttackRelease('C1', '8n');
+                drumSynth.triggerAttackRelease('C1', '8n', Tone.now(), volumeMultiplier);
               } else if (drumName === 'SNARE' || drumName === 'CLAP') {
-                drumSynth.triggerAttackRelease('8n');
+                drumSynth.triggerAttackRelease('8n', Tone.now(), volumeMultiplier);
               } else if (drumName === 'HAT') {
-                drumSynth.triggerAttackRelease('32n');
+                drumSynth.triggerAttackRelease('32n', Tone.now(), volumeMultiplier);
               }
             }
           }
           currentEventIndex++;
         }
       }, 10);
-      
+
       playbackIntervalsRef.current[track.id] = interval;
       return interval;
     };
-    
+
     playEvents(fromPlayAll ? 0 : (trackPositions[track.id] || 0));
   };
 
@@ -574,6 +580,7 @@ const FX_KEYS = ['q', 'w', 'e', 'r', 't', 'a', 's'];
 
         setTracks(prev => [...prev, newTrack]);
         setTrackPositions(prev => ({ ...prev, [newTrack.id]: 0 }));
+        setTrackVolumes(prev => ({ ...prev, [newTrack.id]: 0 })); // 0dB = 100% volume
 
         // Stop all tracks from the stream
         stream.getTracks().forEach(track => track.stop());
@@ -604,7 +611,8 @@ const FX_KEYS = ['q', 'w', 'e', 'r', 't', 'a', 's'];
     setPlayingTracks(newPlayingTracks);
 
     const audio = new Audio(track.audioUrl);
-    audio.volume = Math.pow(10, volume / 20); // Convert dB to linear
+    const trackVol = trackVolumes[track.id] ?? 0; // Default to 0dB if not set
+    audio.volume = Math.pow(10, (volume + trackVol) / 20); // Combine master + track volume
     voicePlayerRef.current = { [track.id]: audio };
 
     const startPosition = fromPlayAll ? 0 : (trackPositions[track.id] || 0);
@@ -1407,94 +1415,135 @@ const FX_KEYS = ['q', 'w', 'e', 'r', 't', 'a', 's'];
                       background: '#000',
                       border: `1px solid ${playingTracks.has(track.id) ? colors.lime : colors.border}`
                     }}>
-                      <div className="flex items-center justify-between mb-2">
-                        <div className="flex items-center gap-2">
-                          <span className="text-xs font-bold" style={{ color: colors.cyan }}>{track.name}</span>
-                          {track.type === 'voice' && (
-                            <span className="text-xs px-1 py-0.5" style={{
-                              color: colors.cyan,
-                              background: `${colors.cyan}20`,
-                              border: `1px solid ${colors.cyan}`,
-                              fontSize: '8px'
-                            }}>
-                              MIC
-                            </span>
-                          )}
+                      <div className="flex gap-3">
+                        {/* Volume slider - vertical */}
+                        <div className="flex flex-col items-center justify-center" style={{ width: '24px' }}>
+                          <div className="text-xs mb-1" style={{ color: colors.text, fontSize: '8px' }}>
+                            VOL
+                          </div>
+                          <div className="relative h-20 w-2" style={{ background: colors.border }}>
+                            <div
+                              className="absolute bottom-0 w-full transition-all"
+                              style={{
+                                height: `${((trackVolumes[track.id] ?? 0) + 20) / 20 * 100}%`,
+                                background: `linear-gradient(180deg, ${colors.lime}, ${colors.cyan})`
+                              }}
+                            />
+                            <input
+                              type="range"
+                              min="-20"
+                              max="0"
+                              step="1"
+                              value={trackVolumes[track.id] ?? 0}
+                              onChange={(e) => {
+                                const newVol = Number(e.target.value);
+                                setTrackVolumes(prev => ({ ...prev, [track.id]: newVol }));
+                                // Update voice track volume in real-time if playing
+                                if (track.type === 'voice' && voicePlayerRef.current?.[track.id]) {
+                                  voicePlayerRef.current[track.id].volume = Math.pow(10, (volume + newVol) / 20);
+                                }
+                              }}
+                              className="absolute inset-0 w-full opacity-0 cursor-pointer"
+                              style={{ transform: 'rotate(-90deg)', transformOrigin: 'center', width: '80px', left: '-29px', top: '29px' }}
+                            />
+                          </div>
+                          <div className="text-xs mt-1" style={{ color: colors.lime, fontSize: '8px' }}>
+                            {trackVolumes[track.id] ?? 0}dB
+                          </div>
                         </div>
-                        <span className="text-xs" style={{ color: colors.text }}>
-                          {formatTime(trackPositions[track.id] || 0)} / {formatTime(track.duration)}
-                        </span>
-                      </div>
 
-                      {/* Progress bar */}
-                      <div className="relative h-1 mb-2" style={{ background: colors.border }}>
-                        <div
-                          className="absolute h-full transition-all"
-                          style={{
-                            width: `${((trackPositions[track.id] || 0) / track.duration) * 100}%`,
-                            background: playingTracks.has(track.id) ? colors.lime : colors.cyan
-                          }}
-                        />
-                      </div>
+                        {/* Track info and controls */}
+                        <div className="flex-1">
+                          <div className="flex items-center justify-between mb-2">
+                            <div className="flex items-center gap-2">
+                              <span className="text-xs font-bold" style={{ color: colors.cyan }}>{track.name}</span>
+                              {track.type === 'voice' && (
+                                <span className="text-xs px-1 py-0.5" style={{
+                                  color: colors.cyan,
+                                  background: `${colors.cyan}20`,
+                                  border: `1px solid ${colors.cyan}`,
+                                  fontSize: '8px'
+                                }}>
+                                  MIC
+                                </span>
+                              )}
+                            </div>
+                            <span className="text-xs" style={{ color: colors.text }}>
+                              {formatTime(trackPositions[track.id] || 0)} / {formatTime(track.duration)}
+                            </span>
+                          </div>
 
-                      {/* Controls */}
-                      <div className="flex gap-1">
-                        <button
-                          onClick={() => seekTrack(track.id, 'backward')}
-                          className="flex-1 py-1 flex items-center justify-center transition-all hover:opacity-80"
-                          style={{ border: `1px solid ${colors.border}`, color: colors.text }}
-                        >
-                          <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
-                            <rect x="0" y="2" width="2" height="8" />
-                            <polygon points="11,2 11,10 4,6" />
-                          </svg>
-                        </button>
-                        <button
-                          onClick={() => {
-                            if (playingTracks.has(track.id)) {
-                              track.type === 'voice' ? pauseVoiceTrack(track.id) : pauseTrack(track.id);
-                            } else {
-                              track.type === 'voice' ? playVoiceTrack(track) : playTrack(track);
-                            }
-                          }}
-                          className="flex-1 py-1 flex items-center justify-center transition-all hover:opacity-80"
-                          style={{
-                            border: `1px solid ${playingTracks.has(track.id) ? colors.lime : colors.border}`,
-                            color: playingTracks.has(track.id) ? colors.lime : colors.text,
-                            background: playingTracks.has(track.id) ? `${colors.lime}20` : 'transparent'
-                          }}
-                        >
-                          {playingTracks.has(track.id) ? (
-                            <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
-                              <rect x="2" y="2" width="3" height="8" />
-                              <rect x="7" y="2" width="3" height="8" />
-                            </svg>
-                          ) : (
-                            <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
-                              <polygon points="2,1 2,11 11,6" />
-                            </svg>
-                          )}
-                        </button>
-                        <button
-                          onClick={() => seekTrack(track.id, 'forward')}
-                          className="flex-1 py-1 flex items-center justify-center transition-all hover:opacity-80"
-                          style={{ border: `1px solid ${colors.border}`, color: colors.text }}
-                        >
-                          <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
-                            <polygon points="1,2 1,10 8,6" />
-                            <rect x="10" y="2" width="2" height="8" />
-                          </svg>
-                        </button>
-                        <button
-                          onClick={() => deleteTrack(track.id)}
-                          className="flex-1 py-1 flex items-center justify-center transition-all hover:opacity-80"
-                          style={{ border: `1px solid ${colors.magenta}`, color: colors.magenta }}
-                        >
-                          <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
-                            <rect x="1" y="5" width="10" height="2" transform="rotate(45 6 6)" />
-                            <rect x="1" y="5" width="10" height="2" transform="rotate(-45 6 6)" />
-                          </svg>
-                        </button>
+                          {/* Progress bar */}
+                          <div className="relative h-1 mb-2" style={{ background: colors.border }}>
+                            <div
+                              className="absolute h-full transition-all"
+                              style={{
+                                width: `${((trackPositions[track.id] || 0) / track.duration) * 100}%`,
+                                background: playingTracks.has(track.id) ? colors.lime : colors.cyan
+                              }}
+                            />
+                          </div>
+
+                          {/* Controls */}
+                          <div className="flex gap-1">
+                            <button
+                              onClick={() => seekTrack(track.id, 'backward')}
+                              className="flex-1 py-1 flex items-center justify-center transition-all hover:opacity-80"
+                              style={{ border: `1px solid ${colors.border}`, color: colors.text }}
+                            >
+                              <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
+                                <rect x="0" y="2" width="2" height="8" />
+                                <polygon points="11,2 11,10 4,6" />
+                              </svg>
+                            </button>
+                            <button
+                              onClick={() => {
+                                if (playingTracks.has(track.id)) {
+                                  track.type === 'voice' ? pauseVoiceTrack(track.id) : pauseTrack(track.id);
+                                } else {
+                                  track.type === 'voice' ? playVoiceTrack(track) : playTrack(track);
+                                }
+                              }}
+                              className="flex-1 py-1 flex items-center justify-center transition-all hover:opacity-80"
+                              style={{
+                                border: `1px solid ${playingTracks.has(track.id) ? colors.lime : colors.border}`,
+                                color: playingTracks.has(track.id) ? colors.lime : colors.text,
+                                background: playingTracks.has(track.id) ? `${colors.lime}20` : 'transparent'
+                              }}
+                            >
+                              {playingTracks.has(track.id) ? (
+                                <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
+                                  <rect x="2" y="2" width="3" height="8" />
+                                  <rect x="7" y="2" width="3" height="8" />
+                                </svg>
+                              ) : (
+                                <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
+                                  <polygon points="2,1 2,11 11,6" />
+                                </svg>
+                              )}
+                            </button>
+                            <button
+                              onClick={() => seekTrack(track.id, 'forward')}
+                              className="flex-1 py-1 flex items-center justify-center transition-all hover:opacity-80"
+                              style={{ border: `1px solid ${colors.border}`, color: colors.text }}
+                            >
+                              <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
+                                <polygon points="1,2 1,10 8,6" />
+                                <rect x="10" y="2" width="2" height="8" />
+                              </svg>
+                            </button>
+                            <button
+                              onClick={() => deleteTrack(track.id)}
+                              className="flex-1 py-1 flex items-center justify-center transition-all hover:opacity-80"
+                              style={{ border: `1px solid ${colors.magenta}`, color: colors.magenta }}
+                            >
+                              <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
+                                <rect x="1" y="5" width="10" height="2" transform="rotate(45 6 6)" />
+                                <rect x="1" y="5" width="10" height="2" transform="rotate(-45 6 6)" />
+                              </svg>
+                            </button>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   ))
