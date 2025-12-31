@@ -773,18 +773,17 @@ const FX_KEYS = ['q', 'w', 'e', 'r', 't', 'a', 's'];
             </div>
 
             {/* Current Chord Display */}
-            <div className="mb-6 p-4" style={{ background: '#000', border: `1px solid ${colors.cyan}` }}>
-              <div className="text-xs mb-1 tracking-widest" style={{ color: colors.text }}>
-                ACTIVE.CHORD
-              </div>
-              <div className="text-3xl font-bold tracking-wider" style={{ 
-                color: colors.cyan,
-                textShadow: `0 0 10px ${colors.cyan}`
-              }}>
-                {currentChord.root} <span style={{ color: colors.lime }}>{currentChord.type.toUpperCase()}</span>
-              </div>
-              <div className="text-xs mt-2" style={{ color: colors.text }}>
-                NOTES: {currentChord.notes.join(' - ')}
+            <div className="mb-4 p-3" style={{ background: '#000', border: `1px solid ${colors.cyan}` }}>
+              <div className="flex items-center justify-between">
+                <div className="text-xs tracking-widest" style={{ color: colors.text }}>
+                  ACTIVE.CHORD
+                </div>
+                <div className="text-xl font-bold" style={{
+                  color: colors.cyan,
+                  textShadow: `0 0 10px ${colors.cyan}`
+                }}>
+                  {currentChord.root} <span style={{ color: colors.lime }}>{currentChord.type.toUpperCase()}</span>
+                </div>
               </div>
             </div>
 
