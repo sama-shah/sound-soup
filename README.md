@@ -1,35 +1,31 @@
-# 🎹 Sound Soup
+# welcome to sound soup :p
 https://sama-shah.github.io/sound-soup/
 
-**A web-based music synthesizer to experimentally remix the music you love.**
+this web app acts just like it sounds. a mixture of sounds thrown together to make you feel warm inside. each time you come across a new vegatable in your soup that tastes good is the same feeling each layer you add to your track feels as you remix your favorite songs. call me a poet or whatever.
 
-Built for experimental musicians who play by ear and want to make music that *feels* good.
+**Sound Soup is a web-based music synthesizer to dress up a song into another genre. i use this app as a way to create tracks that layers over the song i am listening to to turn it into a whimsical/house/trap remix.**
 
----
-
-## 🎵 The Story
-
-I've played piano my whole life — not competitively, but experimentally. I'd listen to songs I loved and recreate them by ear, building my own versions piece by piece. My taste spans pop, whimsical vibes, house/trap, and dark R&B. What I chase is that **dopamine rush** you get from a remix that plays with layers and emotions — switching between hype, mellow, jazzy, or bossa nova moods.
-
-Despite what people might expect, I never learned much formal music theory. I built my ear through experimentation. That's exactly why I created Sound Soup: **to let anyone make beats and layer sounds that sound good without needing to know scales, intervals, or chord progressions.**
-
-Sound Soup is inspired by the digital omnichord — that magical instrument with built-in chord buttons and a strumplate. But I wanted more: more sounds, more genres, more creative freedom. So I built this.
+Inspired by the way i use dj.app and onlineomnichord.com, i designed sound soup for experimental musicians who have an ear for music but dont care to pull up & relearn music theory just to execute a vision. more people need to make music that *feels* good - something between new and nostalgic.
 
 ---
 
-## ✨ What Makes Sound Soup Special
+## 🎵 why did i make this?
 
-### 🎹 Built-In Chords
-No need to know what notes make up a G7 or C minor. Just press a button and the chord is ready. The Chord Matrix gives you:
-- **9 chord roots** (C, D, E, F, G, A, B, C#, D#)
-- **3 chord types** (Major, Minor, 7th)
+i've played piano my whole life. not competitively, but experimentally. i'd listen to songs I loved and recreate them by ear, boften turning mellow songs upbeat or upbeat songs mellow. my taste in music spans pop, whimsical vibes, house/trap, and dark R&B. What I chase is the **dopamine rush** i get when i hear a small artist on tik tok make a remix of a song that only 60 ppl on the internet has seen yet it just changed my life. like what do you mean you just casually made a bollywood pop song sound bossa nova?? and flawlessly too.
 
-That's 27 chords at your fingertips.
+i never learned much formal music theory. I built my ear through experimentation, and i intent for sound soup to be the gateway for people who love music to create music without the whole skill barrier of buying and using fancy equipment.
 
-### 🎸 Strumplate
-Inspired by the omnichord, the strumplate is pre-configured to perfectly layer on top of whatever chord you've selected. Just swipe across the keys and it sounds right — no wrong notes.
+---
 
-### 🎧 Five Sound Modes
+## what i love about sound soup <3
+
+### multiple sounds
+i've added sounds that i believe make it so easy to make anything have a little house, trap, or whimsicalness to it. here's the 3 main ways.
+
+### 1. built-in chords
+No need to know what notes make up a G7 or C minor. Just press a button and the chord plays for you. the strumplate is programmed to match the chord you're playing n the matrix so that it can be strummed on top of the chord, and there's no way it could sound bad. this is the omnichord fucntionality of the board, except it can be harp, house, or trap as well.
+
+### 2. sound modes across the board
 Switch between different vibes:
 - **Omnichord** – The classic warm, harp-like sound
 - **Harp** – Bright and ethereal
@@ -37,33 +33,30 @@ Switch between different vibes:
 - **Trap** – Dark and moody
 - **Drop** – Heavy bass for those big moments
 
-### 🥁 Built-In Effects
-Add percussion and ear candy:
-- **Kick, Snare, Hat, Clap** – Build your rhythm
-- **Sweep, Laser, Drop** – Add transitions and hype
+### 3. piano & sound effects
+access to a piano and sound effects allows another tier of freedom in case you want to add in a melody here and there. of course, you have a few sound options to choose from here. these are controlled with an on/off button so that keyboard controls are not overriden between features of the board.
 
-### 🎛️ Multi-Track Recording
-Layer up to 4 tracks and loop them together. Build a beat, record a melody, add effects — then layer it all into something unique.
+### 3. record your beat/voice and layer!
+layer up to 4 tracks and loop them together. build a beat with the board and voice record whatever sounds you want to add. you can record another track while the other tracks playback by clicking "play all" (like you're ed sheeran on stage looping a song together #aurapoints)
 
 ---
 
-## 🚀 How to Use Sound Soup
-
-### Getting Started
-1. **Pick a chord** from the Chord Matrix (try C Major to start)
-2. **Play the strumplate** by clicking or dragging across the 12 keys
-3. **Switch sound modes** to find the vibe you want
-4. **Add effects** with the FX buttons (Kick, Snare, etc.)
+## read the tutorial on the board at the top if you have more questions about how to use it! here's a tldr:
+### Getting started
+1. **pick a chord** from the Chord Matrix (try C Major to start)
+2. **play the strumplate** by clicking or dragging across the 12 keys indicated (number row: 1 through "=")
+3. **switch sound modes** to find the vibe you want
+4. **add effects** with the FX buttons (Kick, Snare, etc.)
 
 ### Creating Layers
-1. Hit **REC** on Track 1
-2. Play your chord progression on the strumplate
-3. Hit **STOP** when you're done
-4. Select Track 2 and **REC** again
-5. Add a melody on the piano keyboard or more strumplate
-6. Keep layering until you've built your sound
+1. hit **REC** on Track 1
+2. play your chord progression on the strumplate
+3. hit **STOP** when you're done
+4. select Track 2 and **REC** again
+5. add a melody on the piano keyboard or more strumplate
+6. keep layering until you've built your sound
 
-### Making Different Genres
+### General Tips 
 
 **Pop / Whimsical**
 - Use **Omnichord** or **Harp** mode
@@ -87,81 +80,3 @@ Layer up to 4 tracks and loop them together. Build a beat, record a melody, add 
 - Try unexpected chord progressions
 - Use the **Drop** effect for transitions
 - Adjust BPM mid-song with the metronome
-
----
-
-## 🎮 Controls
-
-### Chord Matrix
-Click any button to select a chord. The active chord shows in the display.
-
-### Strumplate
-- **Click** individual keys for single notes
-- **Drag** across keys for that classic strum sound
-- All 12 keys are configured to sound good with the active chord
-
-### Piano Keyboard
-- One octave of keys (C through B)
-- **OCTAVE +/-** buttons shift the pitch up or down
-- **Mode selector** switches between sound modes
-- **POWER** toggle to enable/disable the piano section
-
-### Effects Panel
-- **SWEEP, LASER, DROP** – Transition effects
-- **KICK, SNARE, HAT, CLAP** – Percussion
-- **POWER** toggle to enable/disable effects
-
-### Recording
-- **REC** – Start recording on the selected track
-- **STOP** – Stop recording
-- **PLAY** – Play all recorded tracks in a loop
-- **CLEAR** – Erase the selected track
-- **CLEAR ALL** – Reset all tracks
-
-### Metronome
-- **METRO** – Toggle metronome on/off
-- **BPM slider** – Adjust tempo (60-180 BPM)
-
----
-
-## 🌐 Try It Live
-
-**[Play Sound Soup](https://sama-shah.github.io/sound-soup/)**
-
-No installation needed — just open the link and start making music.
-
----
-
-## 💻 Technical Details
-
-Sound Soup is built as a single-file web application using:
-- **React 18** – UI framework
-- **Tone.js** – Web Audio synthesis and effects
-- **Tailwind CSS** – Styling
-- **Press Start 2P font** – Retro aesthetic
-
-All dependencies are loaded via CDN, so the entire app runs in your browser with no backend required.
-
----
-
-## 🎨 Philosophy
-
-Music shouldn't require years of theory to sound good. If you have ears and a sense of rhythm, you can make something that moves people. Sound Soup is built on the belief that **experimentation beats education** when it comes to finding your sound.
-
-This app gives you the scaffolding — the chords, the scales, the rhythm — so you can focus on **layers, emotion, and vibe**. Whether you're chasing that hype energy, a mellow groove, or a dark moody atmosphere, the tools are here. The rest is up to your ears.
-
----
-
-## 🤝 Contributing
-
-Want to add more sounds, effects, or features? This is an open-source project. Feel free to fork it, experiment, and share what you create.
-
----
-
-## 📄 License
-
-MIT License – Use it, remix it, make it your own.
-
----
-
-**Made with ❤️ by someone who believes music is for everyone.**
