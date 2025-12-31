@@ -708,8 +708,9 @@ const FX_KEYS = ['q', 'w', 'e', 'r', 't', 'a', 's'];
         }
       }
 
-      // Process chord keys when FX is not powered and piano is not powered
-      if (!fxPowered && !pianoPowered) {
+      // Process chord keys when piano is OFF (regardless of FX state)
+      // When piano is ON, chord matrix doesn't work at all
+      if (!pianoPowered) {
         const majorIdx = MAJOR_KEYS.indexOf(key);
         if (majorIdx !== -1) {
           setActiveKeys(prev => new Set([...prev, key]));
