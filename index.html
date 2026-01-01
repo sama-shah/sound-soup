@@ -1465,7 +1465,7 @@ const FX_KEYS = ['q', 'w', 'e', 'r', 't', 'a', 's'];
                     {allPlaying ? 'STOP ALL' : 'PLAY ALL'}
                   </button>
 
-                  {/* Beat Record button - only enabled when all tracks are playing */}
+                  {/* Beat Record button */}
                   <button
                     onClick={isRecording ? stopRecording : startRecording}
                     className="px-3 py-2 text-xs tracking-wider transition-all flex items-center gap-2"
@@ -1473,10 +1473,8 @@ const FX_KEYS = ['q', 'w', 'e', 'r', 't', 'a', 's'];
                       background: isRecording ? `${colors.magenta}30` : 'transparent',
                       border: `1px solid ${isRecording ? colors.magenta : colors.border}`,
                       color: isRecording ? colors.magenta : colors.text,
-                      boxShadow: isRecording ? `0 0 15px ${colors.magenta}40` : 'none',
-                      opacity: (!allPlaying && tracks.length > 0) ? 0.5 : 1
+                      boxShadow: isRecording ? `0 0 15px ${colors.magenta}40` : 'none'
                     }}
-                    disabled={!allPlaying && tracks.length > 0}
                   >
                     <div className="w-3 h-3 rounded-full" style={{
                       background: isRecording ? colors.magenta : colors.text,
@@ -1506,14 +1504,7 @@ const FX_KEYS = ['q', 'w', 'e', 'r', 't', 'a', 's'];
                   </button>
                 </div>
               </div>
-              
-              {/* Help text */}
-              {tracks.length > 0 && !allPlaying && (
-                <div className="text-xs mb-3 px-2 py-1" style={{ color: colors.text, opacity: 0.6, background: `${colors.border}50` }}>
-                  Click PLAY ALL to layer a new track on top
-                </div>
-              )}
-              
+
               <style>
                 {`@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }`}
               </style>
