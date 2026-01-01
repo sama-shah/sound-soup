@@ -696,6 +696,14 @@ const FX_KEYS = ['q', 'w', 'e', 'r', 't', 'a', 's'];
         }
       }
 
+      // Handle harp strumplate keys (allow repeats for fast playing)
+      const harpIdx = HARP_KEYS.indexOf(key);
+      if (harpIdx !== -1) {
+        setActiveKeys(prev => new Set([...prev, key]));
+        playHarpNote(harpIdx);
+        return;
+      }
+
       if (e.repeat) return;
 
       // When piano is powered, check for piano keys and play them
@@ -731,12 +739,6 @@ const FX_KEYS = ['q', 'w', 'e', 'r', 't', 'a', 's'];
           return;
         }
       }
-
-      const harpIdx = HARP_KEYS.indexOf(e.key);
-      if (harpIdx !== -1) {
-        playHarpNote(harpIdx);
-        return;
-      }
     };
     
     const handleKeyUp = (e) => {
@@ -758,7 +760,7 @@ const FX_KEYS = ['q', 'w', 'e', 'r', 't', 'a', 's'];
       }
 
       // Check if this was a harp key and release
-      const isHarpKey = HARP_KEYS.includes(e.key);
+      const isHarpKey = HARP_KEYS.includes(key);
       if (isHarpKey) {
         releaseHarpNote();
       }
