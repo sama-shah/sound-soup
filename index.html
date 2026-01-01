@@ -100,6 +100,7 @@ function SoundSoup() {
   const [audioLevels, setAudioLevels] = useState([0, 0, 0, 0, 0, 0, 0, 0]);
   const [chordVolume, setChordVolume] = useState(0); // Chord matrix volume in dB
   const [showTutorial, setShowTutorial] = useState(false);
+  const [notes, setNotes] = useState('');
 
 // FX key mappings when powered on
 const FX_KEYS = ['q', 'w', 'e', 'r', 't', 'a', 's'];
@@ -1732,6 +1733,26 @@ const FX_KEYS = ['q', 'w', 'e', 'r', 't', 'a', 's'];
               }}>
                 {tracks.length}
               </div>
+            </div>
+
+            {/* Notes section */}
+            <div className="mt-4">
+              <div className="text-xs tracking-widest mb-2" style={{ color: colors.text }}>
+                NOTES
+              </div>
+              <textarea
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+                placeholder="Write notes here..."
+                className="w-full p-2 text-xs resize-none outline-none"
+                style={{
+                  background: colors.bg,
+                  border: `1px solid ${colors.border}`,
+                  color: colors.text,
+                  minHeight: '120px',
+                  fontFamily: 'monospace'
+                }}
+              />
             </div>
           </div>
         </div>
